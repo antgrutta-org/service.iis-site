@@ -18,7 +18,7 @@ jobs:
             # Creating credential object using secret
             $cred = New-Object System.Management.Automation.PSCredential($env:USERNAME, (ConvertTo-SecureString $env:PASSWORD -AsPlainText -Force))
             # Mount remote share using credential object
-            New-PSDrive -Name "Z" -PSProvider FileSystem -Root "\\web\wwwroot" -Credential $cred
+            $drive = New-PSDrive -Name "Z" -PSProvider FileSystem -Root "\\web\wwwroot" -Credential $cred
 
       - name: checkout
         uses: actions/checkout@v2
