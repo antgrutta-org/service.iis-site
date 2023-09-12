@@ -1,0 +1,28 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: win-scm
+
+    steps:
+      - name: PowerShell script
+        uses: Amadevus/pwsh-script@v2.0.3
+        env:
+          USERNAME: ${{ secrets.USER }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+        with:
+          script: |
+            # Creating credential object using secret
+            $cred = New-Object System.Management.Automation.PSCredential($env:USERNAME, (ConvertTo-SecureString $env:PASSWORD -AsPlainText -Force))
+            # Mount remote share using credential object
+            New-PSDrive -Name "Z" -PSProvider FileSystem -Root "\\web\wwwroot" -Credential $cred
+
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: Copy Files
+        run: |
+          Copy-Item -Path .\* -Destination Z:\ -Recurse -Force -Verbose
