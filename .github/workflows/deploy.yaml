@@ -27,12 +27,6 @@ jobs:
 
       - name: PowerShell script
         uses: Amadevus/pwsh-script@v2.0.3
-        env:
-          USERNAME: ${{ secrets.USER }}
-          PASSWORD: ${{ secrets.PASSWORD }}
         with:
           script: |
-            # Creating credential object using secret
-            $cred = New-Object System.Management.Automation.PSCredential($env:USERNAME, (ConvertTo-SecureString $env:PASSWORD -AsPlainText -Force))
-            # Copy files using credential object
-            Copy-Item -Path .\* -Destination Z:\ -Recurse -Force -Verbose -Credential $cred
+            Copy-Item -Path .\* -Destination Z:\ -Recurse -Force -Verbose
