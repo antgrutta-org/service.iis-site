@@ -16,7 +16,7 @@ jobs:
         with:
           script: |
             # Remove existing drive if exists
-            if (Test-Path Z:) { Remove-PSDrive -Name Z -Force -ErrorAction SilentlyContinue }
+            if (Test-Path Z:) { Remove-SmbMapping -LocalPath Z: -Force }
             # Creating credential object using secret
             $cred = New-Object System.Management.Automation.PSCredential($env:USERNAME, (ConvertTo-SecureString $env:PASSWORD -AsPlainText -Force))
             # Mount remote share using credential object
