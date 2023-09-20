@@ -7,10 +7,18 @@ on:
         description: "Repo branch/tag reference"
         required: true
         default: "main"
+      environment:
+        description: "Environment name"
+        required: true
+        default: "test"
 
 jobs:
   deploy:
     runs-on: win-scm
+
+    environment:
+      name: ${{ github.event.inputs.environment }}
+      url: http://localhost
 
     steps:
       - name: PowerShell script
@@ -25,7 +33,7 @@ jobs:
             # Creating credential object using secret
             $cred = New-Object System.Management.Automation.PSCredential($env:USERNAME, (ConvertTo-SecureString $env:PASSWORD -AsPlainText -Force))
             # Mount remote share using credential object
-            $drive = New-SmbMapping -RemotePath "\\web\wwwroot" -LocalPath Z: -UserName $env:USERNAME -Password $env:PASSWORD
+            $drive = New-SmbMapping -RemotePath "\\${{ vars.SERVER_NAME }}\wwwroot" -LocalPath Z: -UserName $env:USERNAME -Password $env:PASSWORD
 
       - name: checkout
         uses: actions/checkout@v4
