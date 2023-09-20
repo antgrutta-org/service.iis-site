@@ -2,6 +2,11 @@ name: Deploy
 
 on:
   workflow_dispatch:
+    inputs:
+      repo_ref:
+        description: "Repo branch/tag reference"
+        required: true
+        default: "main"
 
 jobs:
   deploy:
@@ -23,7 +28,9 @@ jobs:
             $drive = New-SmbMapping -RemotePath "\\web\wwwroot" -LocalPath Z: -UserName $env:USERNAME -Password $env:PASSWORD
 
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.repo_ref }}
 
       - name: PowerShell script
         uses: Amadevus/pwsh-script@v2.0.3
